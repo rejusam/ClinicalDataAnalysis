@@ -1,0 +1,23 @@
+# Ignore Python virtual environments and cache
+__pycache__/
+*.pyc
+.env
+.venv
+venv/
+env/
+
+# Ignore OS and IDE specific files
+.DS_Store
+.vscode/
+.idea/
+
+# Ignore temporary script backups
+*~
+
+# Ignore all content in the data directory by default
+data/*
+
+# --- IMPORTANT ---
+# Un-ignore the following specific files so they ARE included in the repository
+!data/mimic_waveform_vitals.csv
+!data/mimic_waveform_summary.csv
