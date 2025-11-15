@@ -46,8 +46,6 @@ Downloads raw waveform data from the MIMIC-III Waveform Database Matched Subset 
 bash get_data_data.sh
 ```
 
-**Note:** Requires PhysioNet credentialing and MIMIC-III data use agreement.
-
 ---
 
 ### Phase 2: Data Processing & Feature Engineering
