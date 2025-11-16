@@ -1,6 +1,6 @@
 # Respiratory Biometric Data Analysis Platform
 
-This project demonstrates a full pipeline for clinical data analysis, from raw data processing to an interactive web-based dashboard. he analysis focuses on **respiratory biometric parameters** from critically ill ICU patients, evaluating oxygen saturation (SpO2), respiratory rate, heart rate, and hypoxemia episodes.
+This project demonstrates a full pipeline for clinical data analysis, from raw data processing to an interactive web-based dashboard. The analysis focuses on **respiratory biometric parameters** from critically ill ICU patients, evaluating oxygen saturation (SpO2), respiratory rate, heart rate, and hypoxemia episodes.
 
 ---
 
