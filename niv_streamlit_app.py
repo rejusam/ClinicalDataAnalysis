@@ -1,7 +1,6 @@
 """
 Clinical Research Scientist - NIV Project
 Respiratory Support Analysis using MIMIC-III Waveform Data
-Demonstrates: Biometric analysis, Clinical programming, Data quality, Statistical analysis
 """
 
 import streamlit as st
