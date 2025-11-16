@@ -8,7 +8,7 @@ This script focuses on:
 - Respiratory waveform analysis (when available)
 - Patient outcomes from clinical database
 
-Author: [Your Name]
+Author: Reju Sam John
 Date: November 2025
 """
 
