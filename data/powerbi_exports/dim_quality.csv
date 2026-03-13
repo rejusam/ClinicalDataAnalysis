@@ -1,0 +1,4 @@
+quality_key,quality_flag,is_valid_for_analysis
+1,Valid,True
+2,Out_of_range,False
+3,Suspicious,False

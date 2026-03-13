@@ -1,0 +1,74 @@
+hour_key,hour_of_stay,shift,day_of_stay,period
+0,0,Night,1,First 24h
+1,1,Night,1,First 24h
+2,2,Night,1,First 24h
+3,3,Night,1,First 24h
+4,4,Night,1,First 24h
+5,5,Night,1,First 24h
+6,6,Night,1,First 24h
+7,7,Day,1,First 24h
+8,8,Day,1,First 24h
+9,9,Day,1,First 24h
+10,10,Day,1,First 24h
+11,11,Day,1,First 24h
+12,12,Day,1,First 24h
+13,13,Day,1,First 24h
+14,14,Day,1,First 24h
+15,15,Day,1,First 24h
+16,16,Day,1,First 24h
+17,17,Day,1,First 24h
+18,18,Day,1,First 24h
+19,19,Night,1,First 24h
+20,20,Night,1,First 24h
+21,21,Night,1,First 24h
+22,22,Night,1,First 24h
+23,23,Night,1,First 24h
+24,24,Night,2,24-48h
+25,25,Night,2,24-48h
+26,26,Night,2,24-48h
+27,27,Night,2,24-48h
+28,28,Night,2,24-48h
+29,29,Night,2,24-48h
+30,30,Night,2,24-48h
+31,31,Day,2,24-48h
+32,32,Day,2,24-48h
+33,33,Day,2,24-48h
+34,34,Day,2,24-48h
+35,35,Day,2,24-48h
+36,36,Day,2,24-48h
+37,37,Day,2,24-48h
+38,38,Day,2,24-48h
+39,39,Day,2,24-48h
+40,40,Day,2,24-48h
+41,41,Day,2,24-48h
+42,42,Day,2,24-48h
+43,43,Night,2,24-48h
+44,44,Night,2,24-48h
+45,45,Night,2,24-48h
+46,46,Night,2,24-48h
+47,47,Night,2,24-48h
+48,48,Night,3,48-72h
+49,49,Night,3,48-72h
+50,50,Night,3,48-72h
+51,51,Night,3,48-72h
+52,52,Night,3,48-72h
+53,53,Night,3,48-72h
+54,54,Night,3,48-72h
+55,55,Day,3,48-72h
+56,56,Day,3,48-72h
+57,57,Day,3,48-72h
+58,58,Day,3,48-72h
+59,59,Day,3,48-72h
+60,60,Day,3,48-72h
+61,61,Day,3,48-72h
+62,62,Day,3,48-72h
+63,63,Day,3,48-72h
+64,64,Day,3,48-72h
+65,65,Day,3,48-72h
+66,66,Day,3,48-72h
+67,67,Night,3,48-72h
+68,68,Night,3,48-72h
+69,69,Night,3,48-72h
+70,70,Night,3,48-72h
+71,71,Night,3,48-72h
+72,72,Night,4,48-72h

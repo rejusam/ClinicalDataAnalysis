@@ -150,8 +150,8 @@ class MIMICWaveformProcessor:
             # If other sources exist, fillna from them and then drop
             if len(existing_sources) > 1:
                 for secondary_source in existing_sources[1:]:
-                    df[standard_name].fillna(df[secondary_source], inplace=True)
-                    df.drop(columns=[secondary_source], inplace=True)
+                    df[standard_name] = df[standard_name].fillna(df[secondary_source])
+                    df = df.drop(columns=[secondary_source])
         
         return df
 

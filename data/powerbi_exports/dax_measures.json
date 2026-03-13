@@ -1,0 +1,10 @@
+{
+  "Average SpO2": "AVERAGE(fact_vitals[spo2])",
+  "Hypoxemia Rate %": "DIVIDE(COUNTROWS(FILTER(fact_vitals, fact_vitals[hypoxemia] = 1)), COUNTROWS(fact_vitals)) * 100",
+  "Patient Count": "DISTINCTCOUNT(fact_vitals[patient_key])",
+  "Total Monitoring Hours": "SUM(dim_patient[monitoring_hours])",
+  "SpO2 Below Target": "CALCULATE(COUNTROWS(fact_vitals), fact_vitals[spo2] < 92)",
+  "Tachypnea Rate %": "DIVIDE(COUNTROWS(FILTER(fact_vitals, fact_vitals[tachypnea] = 1)), COUNTROWS(fact_vitals)) * 100",
+  "Mean Heart Rate": "AVERAGE(fact_vitals[heart_rate])",
+  "High Risk Patient Count": "CALCULATE(DISTINCTCOUNT(dim_patient[patient_key]), dim_patient[risk_category] = \"High\")"
+}

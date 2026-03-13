@@ -1,0 +1,44 @@
+{
+  "model_name": "ICU Respiratory Biometrics",
+  "created": "2026-03-14",
+  "author": "Reju Sam John",
+  "tables": {
+    "fact_vitals": {
+      "type": "Fact",
+      "rows": 34630,
+      "grain": "One row per patient per minute",
+      "relationships": [
+        {
+          "to": "dim_patient",
+          "key": "patient_key",
+          "cardinality": "many-to-one"
+        },
+        {
+          "to": "dim_time",
+          "key": "hour_key",
+          "cardinality": "many-to-one"
+        },
+        {
+          "to": "dim_quality",
+          "key": "quality_key",
+          "cardinality": "many-to-one"
+        }
+      ]
+    },
+    "dim_patient": {
+      "type": "Dimension",
+      "rows": 10,
+      "grain": "One row per patient"
+    },
+    "dim_time": {
+      "type": "Dimension",
+      "rows": 73,
+      "grain": "One row per hour of ICU stay"
+    },
+    "dim_quality": {
+      "type": "Dimension",
+      "rows": 3,
+      "grain": "One row per quality classification"
+    }
+  }
+}

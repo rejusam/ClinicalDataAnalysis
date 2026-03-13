@@ -1,23 +1,31 @@
-# Ignore Python virtual environments and cache
+# Python
 __pycache__/
 *.pyc
+*.pyo
 .env
 .venv
 venv/
 env/
+.pytest_cache/
+htmlcov/
+*.egg-info/
 
-# Ignore OS and IDE specific files
+# OS / IDE
 .DS_Store
 .vscode/
 .idea/
 
-# Ignore temporary script backups
+# Temporary
 *~
 
-# Ignore all content in the data directory by default
-data/*
+# Pipeline logs (regenerated on each run)
+data/logs/
 
-# --- IMPORTANT ---
-# Un-ignore the following specific files so they ARE included in the repository
+# Raw MIMIC data (large, download via get_data_data.sh)
+data/mimic3wdb/
+
+# Keep processed outputs and Power BI exports in the repo
+data/*
 !data/mimic_waveform_vitals.csv
 !data/mimic_waveform_summary.csv
+!data/powerbi_exports/

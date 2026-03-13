@@ -1,6 +1,9 @@
 """
-Clinical Research Scientist - NIV Project
-Respiratory Support Analysis using MIMIC-III Waveform Data
+ICU Respiratory Biometrics Dashboard
+Automated analytics platform for respiratory support analysis
+using MIMIC-III Waveform Data.
+
+Author: Reju Sam John
 """
 
 import streamlit as st
@@ -42,14 +45,14 @@ st.markdown("---")
 
 # Sidebar
 with st.sidebar:
-    st.markdown("### 📊 Project Overview")
+    st.markdown("### 📊 Analytics Capabilities")
     st.info("""
-    - ✅ Biometric Data Analysis
-    - ✅ Clinical Data Programming
+    - ✅ Automated Data Pipeline (ETL)
+    - ✅ Interactive Dashboards
     - ✅ Statistical Analysis
     - ✅ Data Quality & Validation
-    - ✅ Regulatory Compliance (GCP)
-    - ✅ Clinical Insights
+    - ✅ Power BI Export Ready
+    - ✅ Scalable Data Products
     """)
     
     st.markdown("---")
@@ -825,12 +828,12 @@ st.markdown("""
 **Regulatory Compliance:** Analysis follows ICH E9 (Statistical Principles) and ICH E6 GCP guidelines  
 
 **Key Skills Demonstrated:**
-- ✅ **Biometric data analysis:** Continuous vital signs monitoring (SpO2, RR, HR)
-- ✅ **Clinical data programming:** Python-based data extraction, cleaning, and analysis
-- ✅ **Data quality assurance:** Completeness checks, outlier detection, validation procedures
+- ✅ **Data automation:** End-to-end ETL pipeline with validation gates and logging
+- ✅ **Data visualisation & storytelling:** Interactive Plotly dashboards with clinical context
 - ✅ **Statistical analysis:** Hypothesis testing, correlation analysis, effect sizes
-- ✅ **Regulatory-compliant reporting:** GCP-aligned documentation and quality controls
-- ✅ **Clinical outcome evaluation:** Mortality analysis, respiratory severity indicators
+- ✅ **Power BI integration:** Star-schema data model with DAX measure templates
+- ✅ **Data quality assurance:** Completeness checks, outlier detection, validation procedures
+- ✅ **Scalable data products:** CI/CD pipeline, config management, unit tests
 
 **Dataset Information:**
 - Total Patients: {}
@@ -840,7 +843,7 @@ st.markdown("""
 
 ---
 
-**Contact:** Dr Reju Sam John | rejusamjohn@gmail.com | https://www.linkedin.com/in/dr-reju-sam-john-14b00774/
+**Contact:** Reju Sam John | rejusamjohn@gmail.com | https://www.linkedin.com/in/dr-reju-sam-john-14b00774/
 
 """.format(len(patients_df), len(vitals_df), patients_df['monitoring_hours'].mean(),
            len(vitals_df), len(patients_df)))
