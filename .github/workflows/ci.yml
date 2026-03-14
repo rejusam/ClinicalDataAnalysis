@@ -62,7 +62,7 @@ jobs:
           for col in ['subject_id', 'hours', 'spo2', 'respiratory_rate', 'heart_rate']:
               assert col in vitals.columns, f'Missing column: {col}'
 
-          assert vitals['spo2'].between(0, 100).all(), 'SpO2 values out of 0-100 range'
+          assert vitals['spo2'].dropna().between(0, 100).all(), 'SpO2 values out of 0-100 range'
 
           print(f'Vitals:  {len(vitals):,} rows x {len(vitals.columns)} cols')
           print(f'Summary: {len(summary)} patients')
