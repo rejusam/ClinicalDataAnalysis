@@ -1,8 +1,44 @@
 # Respiratory Biometrics Analytics Platform
 
+**Live dashboard:** [rejusam-clinicaldataanalysis-niv-streamlit-app-mggky8.streamlit.app](https://rejusam-clinicaldataanalysis-niv-streamlit-app-mggky8.streamlit.app/)
+
 An automated data analytics pipeline that processes 34,000+ ICU vital-sign measurements, validates data quality, and delivers insights through an interactive Streamlit dashboard and Power BI-ready star-schema exports.
 
 Built to demonstrate end-to-end analytics delivery: from raw data ingestion and automated ETL, through statistical analysis, to self-service BI-ready outputs with CI/CD lifecycle management.
+
+---
+
+## Business Impact & Stakeholder View
+
+The platform is designed around the question a Data Centre of Excellence has to answer every week: *how do we turn a messy clinical data source into something a business stakeholder can trust, explore, and act on — without a data analyst in the loop for every question?*
+
+### What the platform delivers
+
+| Stakeholder                 | Their question today                                       | What this platform gives them                                    |
+|-----------------------------|------------------------------------------------------------|------------------------------------------------------------------|
+| **Clinical lead**           | *"Which patients spent the most time below SpO2 target?"*  | Risk-stratified patient view, hypoxemia rate per patient, drill-down to minute-level readings |
+| **Quality & safety team**   | *"Are our monitoring data actually reliable enough to report on?"* | Automated quality report (completeness, range, outlier flags) with PASS/WARN/FAIL status |
+| **Operations / shift lead** | *"Does respiratory deterioration cluster by shift or day of stay?"* | Temporal breakdown by shift, day-of-stay, and cohort period (first 24h / 24–48h / 48–72h) |
+| **BI / reporting analyst**  | *"I need this in Power BI with proper measures, not a pile of CSVs."* | Star-schema exports with surrogate keys, DAX measure templates, model documentation |
+| **Data engineer on-call**   | *"Did last night's refresh actually succeed?"*             | Timestamped JSON run reports, structured logs per gate, exit codes for alerting |
+
+### What changes when this platform is in place
+
+- **From one-off analyses to a living data product.** The same pipeline runs on every code change (via CI) and every new data drop. Reports don't drift away from the code that produced them.
+- **From "ask the analyst" to managed self-service.** The Power BI star schema is deliberately shaped so business users can build their own visuals. The DAX starter measures give them a correct baseline without them needing to understand the underlying filter context.
+- **From hope-based quality to observable quality.** Four named validation gates, each with a logged outcome. If something drifts, you see it in the next run's report, not three weeks later in a stakeholder email.
+- **From local notebook to reproducible build.** Centralised config, pinned requirements, containerised dev environment, CI gating merges. Any analyst joining the team can clone and run it in minutes.
+
+### How this maps to the target ways of working
+
+| What a Data Centre of Excellence cares about | Where it shows up in this project                                           |
+|----------------------------------------------|------------------------------------------------------------------------------|
+| Enterprise BI platform (Power BI)            | `powerbi_export.py` — star schema, DAX templates, model JSON                 |
+| Scalable, maintainable data products         | Four-gate pipeline, centralised config, pytest coverage, star schema design  |
+| Reliability & documentation                  | Per-run JSON reports, structured logs, `docs/data_model.md`, inline module docs |
+| Lifecycle management                         | GitHub Actions (lint → test → data validation), Makefile, devcontainer      |
+| Data storytelling                            | Streamlit dashboard with five analysis modules, Plotly visuals, CSV export   |
+| Statistical rigour                           | t-tests, Cohen's d, correlation matrices, Z-score outlier detection          |
 
 ---
 
@@ -181,7 +217,8 @@ High Risk Patient Count =
 
 ## Interactive Dashboard
 
-**Script:** `niv_streamlit_app.py` | Launch: `streamlit run niv_streamlit_app.py`
+**Live demo:** https://rejusam-clinicaldataanalysis-niv-streamlit-app-mggky8.streamlit.app/
+**Script:** `niv_streamlit_app.py` | Launch locally: `streamlit run niv_streamlit_app.py`
 
 Five integrated analysis modules:
 
@@ -205,6 +242,66 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and PR:
 2. **Test** - pytest unit tests for the processing pipeline
 3. **Data Validation** - Schema and range checks on the committed CSV datasets
 
+The `data-validation` job runs only after `lint-and-test` passes, so no CSV lands on `main` without the processing code that produced it having been tested first.
+
+---
+
+## Lifecycle & Ops
+
+This section describes how I'd run the project as a living data product — how changes flow through, how failures are surfaced, and how I'd roll back. It's written for the next analyst who inherits it.
+
+### How a schema change flows through the four gates
+
+Suppose the source starts emitting a new vital sign (e.g. `end_tidal_co2`) and a stakeholder wants it on the dashboard.
+
+| Gate | What happens                                                                                  | What I check                                                                  |
+|------|-----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| **0 — Config** (before Gate 1) | Add the new column name mapping in `mimic_waveform_processor.py` and any threshold in `config.py`. | `pytest tests/` locally — the standardisation tests catch column rename regressions. |
+| **Gate 1 — Source validation** | The new column is detected in raw records. No change to the gate itself.                      | Logs still show the patient directories discovered.                           |
+| **Gate 2 — ETL processing**    | The processor picks up the new column, applies quality flags, and writes it to the vitals CSV. | `data_pipeline.py --skip-etl` reads the updated CSV and re-runs downstream.   |
+| **Gate 3 — Quality validation**| Completeness and range checks run on the new column if a threshold is defined in `config.py`. | Quality gate returns `PASS` / `WARN`; `WARN` is non-blocking but surfaced in the report. |
+| **Gate 4 — Power BI export**   | `powerbi_export.py` adds the new column to the fact table keep-list and (optionally) a new DAX measure. | Row counts in the export summary match the processed CSVs; `data_model.json` reflects the new column. |
+
+The pipeline is designed so that **a failure in any gate blocks the downstream gates**, and the JSON run report (`data/logs/pipeline_report_YYYYMMDD_HHMMSS.json`) names exactly which gate failed and why.
+
+### Rollback strategy
+
+The processed CSVs and Power BI exports are committed to git alongside the code that produced them. Rollback is therefore a single action:
+
+```bash
+# Revert to the last known-good snapshot
+git checkout <good-commit> -- data/ tests/
+
+# Re-verify against the reverted data
+python data_pipeline.py --skip-etl
+pytest tests/ -v
+```
+
+Because `.github/workflows/ci.yml` runs the data-validation step on every push, any commit that lands on `main` has already been validated against the CSVs it contains. This means **"the last green `main` commit"** is always a valid rollback target.
+
+### Where the logs live
+
+| Artifact                                           | Location                                     | Retention                                  |
+|----------------------------------------------------|----------------------------------------------|--------------------------------------------|
+| Per-run pipeline logs (timestamped text)           | `data/logs/pipeline_YYYYMMDD_HHMMSS.log`     | Kept locally; gitignored for privacy       |
+| Per-run machine-readable reports (status + steps)  | `data/logs/pipeline_report_YYYYMMDD_HHMMSS.json` | Kept locally; gitignored                |
+| CI run logs (lint, test, data validation)          | GitHub Actions → Actions tab on the repo    | GitHub default (~90 days)                  |
+| Data model documentation                           | `data/powerbi_exports/data_model.json`       | Regenerated every export                   |
+
+### Observability signals the panel would ask about
+
+- **Did the pipeline finish?** `overall: "SUCCESS"` in the JSON report.
+- **Which gate flagged something?** Each step in the JSON report has `status` (`PASS` / `WARN` / `SKIP` / `FAIL`) and a `details` string.
+- **Why did a gate warn?** The `details` field names the column and the failing threshold (e.g. `"spo2 completeness 94.2% < target"`).
+- **Are the processed CSVs still schema-valid?** The `data-validation` CI job asserts this on every push — a red CI run is the single source of truth.
+
+### Things I would add next if this graduated from portfolio to production
+
+- Replace committed CSVs with a lakehouse-backed table (Delta / Iceberg) so rollback becomes time-travel rather than git checkout.
+- Move the JSON run reports into a log aggregator (Splunk, Log Analytics, OpenSearch) with alerting on `overall: "FAILED"`.
+- Wire the Power BI dataset refresh to the pipeline success event so the report can't be ahead of the data that produced it.
+- Promote the CI data-validation job into a nightly scheduled run against the live source, not just a PR gate.
+
 ---
 
 ## Project Structure
@@ -213,6 +310,8 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and PR:
 ClinicalDataAnalysis/
 |-- .github/workflows/ci.yml      # CI/CD pipeline
 |-- .devcontainer/devcontainer.json # Codespaces / Dev Container setup
+|-- docs/
+|   +-- data_model.md              # Star schema, grain, SCD decisions
 |-- data/
 |   |-- mimic_waveform_vitals.csv  # Processed time-series (34,630 rows)
 |   |-- mimic_waveform_summary.csv # Patient summaries (10 rows)
